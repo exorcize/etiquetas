@@ -37,9 +37,9 @@ def fit(draw, text, spec, max_w, start):
         s -= 1
     return font(spec, 8)
 
-def render(date_str, model="fab"):
+def render(date_str, model="fab", rows=None):
     M = MODELS[model]
-    rows = M["rows"]
+    rows = rows or M["rows"]
     img = Image.new("L", (W, H), 255)          # branco
     d = ImageDraw.Draw(img)
 
@@ -115,12 +115,13 @@ def main():
     args = sys.argv[1:]
     preview_only = "preview" in args
     model = "simple" if "simple" in args else "fab"
+    rows = next((int(a) for a in args if a.isdigit()), None)   # ex: python3 labels.py preview simple 8
     m = next((a for a in args if re.fullmatch(r"\d{2}/\d{2}/\d{4}", a)), None)
     date_str = m or datetime.now().strftime("%d/%m/%Y")
 
-    img = render(date_str, model)
+    img = render(date_str, model, rows)
     img.save("preview.png")
-    print(f"Data: {date_str}  modelo: {model}  ->  preview.png salvo")
+    print(f"Data: {date_str}  modelo: {model}  linhas: {rows or MODELS[model]['rows']}  ->  preview.png salvo")
 
     if not preview_only:
         asyncio.run(do_print(pack(img)))
