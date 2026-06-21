@@ -54,7 +54,7 @@ def render(date_str, model="fab", rows=None):
     date_f = fit(d, date_str, F_DATE, cw - 2*pad, 27)
     _, _, _, date_h = d.textbbox((0,0), date_str, font=date_f)
     if M["caption"]:
-        cap_f = font(F_CAPTION, 19)
+        cap_f = font(F_CAPTION, 22)
         _, _, _, cap_h = d.textbbox((0,0), CAPTION, font=cap_f)
         block = cap_h + gap + date_h
     else:

@@ -182,7 +182,7 @@ function render(ctx, dateStr){
   for(let r=0;r<=ROWS;r++) ctx.fillRect(ox, oy+r*ch, COLS*cw+1, 1);
 
   const maxW=cw-2*PAD;
-  const capPx  = M.caption ? fitFont(ctx, CAPTION,  maxW, Math.round(17*fontScale), "bold") : 0;
+  const capPx  = M.caption ? fitFont(ctx, CAPTION,  maxW, Math.round(21*fontScale), "bold") : 0;
   const datePx = fitFont(ctx, dateStr, maxW, Math.round(30*fontScale), "600");
   const block  = (M.caption ? capPx+GAP : 0) + datePx;
   ctx.textAlign="center"; ctx.textBaseline="top";
