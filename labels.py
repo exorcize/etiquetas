@@ -12,7 +12,7 @@ NOTIFY = "00002af0-0000-1000-8000-00805f9b34fb"
 W, H      = 384, 400      # 1 etiqueta 5x5cm em dots
 MARGIN    = 20            # respiro nas bordas (nao cortar/apagar)
 OFF_X     = -12           # deslocamento: mais negativo = mais pra esquerda
-OFF_Y     = -12           # mais positivo = mais pra baixo / negativo = mais pra cima
+OFF_Y     = -9            # mais positivo = mais pra baixo / negativo = mais pra cima
 COLS      = 2
 CAPTION   = "Data de fab:"
 MODELS = {
