@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Etiquetas MY-7779</title>
+<style>
+  :root{
+    --bg:#f3f1ec; --card:#fff; --ink:#1b1b1a; --muted:#86837c;
+    --line:#e6e3dc; --accent:#15803d; --accent-press:#116330; --danger:#b4453a;
+    --radius:18px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0}
+  body{
+    font-family:"Avenir Next","-apple-system",system-ui,sans-serif;
+    background:var(--bg); color:var(--ink);
+    min-height:100dvh; padding:max(20px,env(safe-area-inset-top)) 18px calc(20px + env(safe-area-inset-bottom));
+    display:flex; justify-content:center;
+  }
+  .wrap{width:100%; max-width:430px; display:flex; flex-direction:column; gap:16px}
+  header h1{font-size:22px; font-weight:700; margin:2px 0 0}
+  header p{margin:2px 0 0; color:var(--muted); font-size:14px}
+
+  .card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+        padding:16px; box-shadow:0 1px 2px rgba(0,0,0,.04)}
+
+  label.fld{display:block; font-size:13px; font-weight:600; color:var(--muted);
+            text-transform:uppercase; letter-spacing:.04em; margin-bottom:8px}
+  .row{display:flex; gap:10px; align-items:center}
+  input[type=date]{
+    flex:1; font:inherit; font-size:18px; font-weight:600; color:var(--ink);
+    padding:13px 14px; border:1px solid var(--line); border-radius:13px; background:#fbfaf7;
+    appearance:none; min-height:52px;
+  }
+  .chip{font:inherit; font-weight:600; font-size:15px; padding:0 16px; min-height:52px;
+        border:1px solid var(--line); border-radius:13px; background:#fbfaf7; color:var(--ink)}
+  .chip:active{background:#efece5}
+
+  .stepper{display:flex; align-items:center; gap:0; border:1px solid var(--line);
+           border-radius:13px; overflow:hidden; background:#fbfaf7}
+  .stepper button{font:inherit; font-size:24px; font-weight:600; width:54px; min-height:52px;
+                  border:0; background:transparent; color:var(--ink)}
+  .stepper button:active{background:#efece5}
+  .stepper output{flex:1; text-align:center; font-size:18px; font-weight:700}
+
+  .seg{display:flex; gap:6px; background:#efece5; padding:5px; border-radius:13px}
+  .seg button{flex:1; font:inherit; font-weight:600; font-size:14.5px; min-height:46px;
+              border:0; border-radius:9px; background:transparent; color:var(--muted)}
+  .seg button.active{background:#fff; color:var(--ink); box-shadow:0 1px 2px rgba(0,0,0,.10)}
+
+  .previewbox{display:flex; justify-content:center; padding:14px; background:#efece5; border-radius:14px}
+  canvas#screen{width:260px; height:auto; background:#fff; border-radius:4px;
+                box-shadow:0 2px 10px rgba(0,0,0,.12); image-rendering:auto}
+
+  .btn{font:inherit; font-weight:700; font-size:18px; width:100%; min-height:58px;
+       border:0; border-radius:15px; cursor:pointer; transition:transform .04s, background .15s}
+  .btn:active{transform:scale(.985)}
+  .btn-primary{background:var(--accent); color:#fff}
+  .btn-primary:active{background:var(--accent-press)}
+  .btn-primary:disabled{background:#cbd5cf; color:#fff}
+  .btn-ghost{background:transparent; color:var(--ink); border:1.5px solid var(--line)}
+
+  .status{display:flex; align-items:center; gap:9px; font-size:14px; color:var(--muted);
+          justify-content:center; min-height:22px}
+  .dot{width:9px; height:9px; border-radius:50%; background:#c4c1b9}
+  .dot.on{background:var(--accent)} .dot.busy{background:#d99423} .dot.err{background:var(--danger)}
+
+  .note{font-size:12.5px; color:var(--muted); text-align:center; line-height:1.5}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Etiquetas de validade</h1>
+    <p>MY-7779 · grid 2×5 · 5×5cm</p>
+  </header>
+
+  <div class="card" style="display:flex; flex-direction:column; gap:16px">
+    <div>
+      <label class="fld">Modelo</label>
+      <div class="seg" id="seg">
+        <button data-m="fab" class="active">Data de fab.</button>
+        <button data-m="simple">Só a data</button>
+      </div>
+    </div>
+
+    <div>
+      <label class="fld" for="date">Data de fabricação</label>
+      <div class="row">
+        <input type="date" id="date">
+        <button class="chip" id="today">Hoje</button>
+      </div>
+    </div>
+
+    <div>
+      <label class="fld">Tamanho da fonte</label>
+      <div class="stepper">
+        <button id="fminus" aria-label="menor">–</button>
+        <output id="fval">100%</output>
+        <button id="fplus" aria-label="maior">+</button>
+      </div>
+    </div>
+
+    <div>
+      <label class="fld">Cópias da etiqueta</label>
+      <div class="stepper">
+        <button id="minus" aria-label="menos">–</button>
+        <output id="qty">1</output>
+        <button id="plus" aria-label="mais">+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="previewbox">
+    <canvas id="screen" width="384" height="400"></canvas>
+  </div>
+
+  <button class="btn btn-primary" id="print">Imprimir</button>
+  <button class="btn btn-ghost hidden" id="disc">Desconectar</button>
+  <div class="status"><span class="dot" id="dot"></span><span id="msg">Toque em Imprimir para conectar</span></div>
+
+  <p class="note" id="webbt-warn"></p>
+</div>
+
+<script>
+const W=384, H=400, MARGIN=14, COLS=2, PAD=8, GAP=4;
+// ajuste de posicao (a impressora joga o papel um pouco pra esquerda)
+const OFF_X=-12;   // mais negativo = mais pra esquerda
+const OFF_Y=12;    // mais positivo  = mais pra baixo
+const CAPTION="Data de fab:";
+// modelos de etiqueta
+const MODELS={
+  fab:    {rows:5, caption:true,  label:"Data de fab."},
+  simple: {rows:7, caption:false, label:"Só a data"},
+};
+let model="fab";       // modelo atual
+let fontScale=1.0;     // 0.7 .. 1.3 (botoes +/-)
+// service/char da MY-7779 (descobertos no Mac) — UUID completo (Bluefy nao parseia o curto)
+const SVC="000018f0-0000-1000-8000-00805f9b34fb";
+const CHR="00002af1-0000-1000-8000-00805f9b34fb";
+
+const $ = id => document.getElementById(id);
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
+
+// ---------- data ----------
+function todayISO(){
+  const d=new Date(); const p=n=>String(n).padStart(2,"0");
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
+}
+function iso2br(iso){ const [y,m,d]=iso.split("-"); return `${d}/${m}/${y}`; }
+
+// ---------- render (espelha o labels.py) ----------
+function fitFont(ctx, text, maxW, start, weight){
+  for(let s=start; s>6; s--){
+    ctx.font = `${weight} ${s}px "Avenir Next", -apple-system, sans-serif`;
+    if(ctx.measureText(text).width <= maxW) return s;
+  }
+  return 6;
+}
+function render(ctx, dateStr){
+  const M=MODELS[model], ROWS=M.rows;
+  const cw=Math.floor((W-2*MARGIN)/COLS), ch=Math.floor((H-2*MARGIN)/ROWS);
+  const ox=Math.floor((W-cw*COLS)/2)+OFF_X, oy=Math.floor((H-ch*ROWS)/2)+OFF_Y;
+
+  ctx.fillStyle="#fff"; ctx.fillRect(0,0,W,H);
+  ctx.fillStyle="#000";
+  // grade (guias de corte) — linhas de 1px nítidas
+  for(let c=0;c<=COLS;c++) ctx.fillRect(ox+c*cw, oy, 1, ROWS*ch+1);
+  for(let r=0;r<=ROWS;r++) ctx.fillRect(ox, oy+r*ch, COLS*cw+1, 1);
+
+  const maxW=cw-2*PAD;
+  const capPx  = M.caption ? fitFont(ctx, CAPTION,  maxW, Math.round(17*fontScale), "bold") : 0;
+  const datePx = fitFont(ctx, dateStr, maxW, Math.round(30*fontScale), "600");
+  const block  = (M.caption ? capPx+GAP : 0) + datePx;
+  ctx.textAlign="center"; ctx.textBaseline="top";
+
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+    const x0=ox+c*cw, y0=oy+r*ch, cx=x0+cw/2;
+    let ty=y0+(ch-block)/2;
+    if(M.caption){
+      ctx.font=`bold ${capPx}px "Avenir Next", -apple-system, sans-serif`;
+      ctx.fillText(CAPTION, cx, ty);
+      ty+=capPx+GAP;
+    }
+    ctx.font=`600 ${datePx}px "Avenir Next", -apple-system, sans-serif`;
+    ctx.fillText(dateStr, cx, ty);
+  }
+}
+
+// ---------- canvas -> ESC/POS ----------
+function buildEscpos(ctx){
+  const img=ctx.getImageData(0,0,W,H).data, bw=W/8;
+  const buf=new Uint8Array(bw*H);
+  for(let y=0;y<H;y++) for(let x=0;x<W;x++){
+    if(img[(y*W+x)*4] < 128) buf[y*bw+(x>>3)] |= (0x80>>(x&7)); // preto -> bit 1
+  }
+  const out=[0x1b,0x40]; // init
+  let y=0;
+  while(y<H){
+    const rows=Math.min(128,H-y);
+    out.push(0x1d,0x76,0x30,0x00, bw&0xff, bw>>8, rows&0xff, rows>>8);
+    for(let i=y*bw;i<(y+rows)*bw;i++) out.push(buf[i]);
+    y+=rows;
+  }
+  out.push(0x0a,0x0a,0x0a); // avanca
+  return new Uint8Array(out);
+}
+
+// ---------- bluetooth ----------
+let characteristic=null, device=null;
+
+async function connect(){
+  device = await navigator.bluetooth.requestDevice({
+    filters:[{namePrefix:"MY-7779"}], optionalServices:[SVC]
+  });
+  device.addEventListener("gattserverdisconnected", onDisc);
+  const server = await device.gatt.connect();
+  const svc = await server.getPrimaryService(SVC);
+  characteristic = await svc.getCharacteristic(CHR);
+}
+function onDisc(){ characteristic=null; setStatus("idle","Desconectado"); $("disc").classList.add("hidden"); }
+
+async function writeAll(data){
+  // iOS/Bluefy: rajada rapida (escuro) SEM confirmacao, com barreira COM confirmacao
+  // a cada N pedacos pra esvaziar a fila do iOS (evita perder pacote -> lixo).
+  const CHUNK=100, BARRIER=10;        // 1 confirmacao a cada 10 pedacos (~1KB)
+  const hasAck = !!characteristic.writeValueWithResponse;
+  const wOut = p => characteristic.writeValueWithoutResponse
+        ? characteristic.writeValueWithoutResponse(p)
+        : characteristic.writeValue(p);
+  let n=0;
+  for(let i=0;i<data.length;i+=CHUNK,n++){
+    const part = data.slice(i,i+CHUNK);   // slice = recorte correto no iOS
+    if(hasAck && n % BARRIER === BARRIER-1)
+      await characteristic.writeValueWithResponse(part); // barreira: flush + sync
+    else
+      await wOut(part);
+  }
+}
+
+// ---------- UI ----------
+function setStatus(kind,text){
+  const dot=$("dot"); dot.className="dot"+(kind==="on"?" on":kind==="busy"?" busy":kind==="err"?" err":"");
+  $("msg").textContent=text;
+}
+function draw(){
+  render($("screen").getContext("2d"), iso2br($("date").value));
+  const M=MODELS[model];
+  document.querySelector("header p").textContent=
+    `MY-7779 · 5×5cm · ${COLS}×${M.rows} = ${COLS*M.rows} por etiqueta`;
+}
+
+let qty=1;
+function setQty(n){ qty=Math.max(1,Math.min(10,n)); $("qty").textContent=qty; }
+function setScale(v){
+  fontScale=Math.max(0.7,Math.min(1.3,Math.round(v*10)/10));
+  $("fval").textContent=Math.round(fontScale*100)+"%"; draw();
+}
+function setModel(m){
+  model=m;
+  for(const b of $("seg").children) b.classList.toggle("active", b.dataset.m===m);
+  draw();
+}
+
+async function onPrint(){
+  const btn=$("print"); btn.disabled=true;
+  try{
+    if(!navigator.bluetooth) throw new Error("Sem Web Bluetooth. Abra no Bluefy.");
+    if(!characteristic){ setStatus("busy","Conectando…"); await connect(); $("disc").classList.remove("hidden"); }
+    setStatus("on","Conectado");
+    draw();
+    const data=buildEscpos($("screen").getContext("2d"));
+    for(let i=1;i<=qty;i++){
+      setStatus("busy", qty>1?`Imprimindo ${i}/${qty}…`:"Imprimindo…");
+      await writeAll(data);
+      await sleep(600);
+    }
+    setStatus("on", qty>1?`Pronto · ${qty} etiquetas`:"Pronto ✓");
+  }catch(e){
+    setStatus("err", (e.name||"Erro")+": "+(e.message||"falhou"));
+  }finally{ btn.disabled=false; }
+}
+
+// init
+$("date").value=todayISO();
+$("today").onclick=()=>{ $("date").value=todayISO(); draw(); };
+$("date").onchange=draw;
+$("minus").onclick=()=>setQty(qty-1);
+$("plus").onclick=()=>setQty(qty+1);
+$("fminus").onclick=()=>setScale(fontScale-0.1);
+$("fplus").onclick=()=>setScale(fontScale+0.1);
+for(const b of $("seg").children) b.onclick=()=>setModel(b.dataset.m);
+$("print").onclick=onPrint;
+$("disc").onclick=()=>{ if(device&&device.gatt.connected) device.gatt.disconnect(); };
+if(!navigator.bluetooth) $("webbt-warn").textContent="Este navegador não tem Web Bluetooth. No iPhone, abra esta página no app Bluefy.";
+draw();
+</script>
+</body>
+</html>
